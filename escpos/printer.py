@@ -63,8 +63,6 @@ class Usb(Escpos):
             self.device.set_configuration()
             usb.util.claim_interface(self.device, self.interface)
         except usb.core.USBError as e:
-            _logger.info('******')
-            _logger.info(e)
             raise HandleDeviceError(e)
 
     def close(self):
@@ -209,8 +207,8 @@ class Network(Escpos):
 
     def open(self):
         """ Open TCP socket and set it as escpos device """
-        self.device = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.device.connect((self.host, self.port))
+        self.device = socket.socket(socket.AF_INET, socket.SOCK_STREAM)     
+        self.device.connect((self.host, self.port))    
 
         if self.device is None:
             print "Could not open socket for %s" % self.host

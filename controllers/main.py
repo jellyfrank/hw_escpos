@@ -20,7 +20,7 @@ import traceback
 try: 
     from .. escpos import *
     from .. escpos.exceptions import *
-    from .. escpos.printer import Usb
+    from .. escpos.printer import Usb,Network
 except ImportError:
     escpos = printer = None
 
@@ -372,6 +372,11 @@ class EscposProxy(hw_proxy.Proxy):
     def print_xml_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT XML RECEIPT') 
         driver.push_task('xml_receipt',receipt)
+
+    @http.route('/hw_proxy/print_network', type='json', auth='none', cors='*')
+    def print_network(self, receipt):        
+        p = Network('192.168.110.253')
+        p.receipt(receipt)
 
     @http.route('/hw_proxy/escpos/add_supported_device', type='http', auth='none', cors='*')
     def add_supported_device(self, device_string):
