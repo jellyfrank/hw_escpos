@@ -10,7 +10,9 @@ import re
 import traceback
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
+import logging
 
+_logger = logging.getLogger(__name__)
 from PIL import Image
 
 try:
@@ -286,6 +288,7 @@ class XmlLineSerializer:
     def text(self,text):
         if text:
             text = utfstr(text)
+            
             text = text.strip()
             text = re.sub('\s+',' ',text)
             if text:
@@ -737,6 +740,7 @@ class Escpos:
             encodings = {
                     # TODO use ordering to prevent useless switches
                     # TODO Support other encodings not natively supported by python ( Thai, Khazakh, Kanjis )
+                    'cp936': TXT_ENC_PC936,
                     'cp437': TXT_ENC_PC437,
                     'cp850': TXT_ENC_PC850,
                     'cp852': TXT_ENC_PC852,
@@ -761,7 +765,8 @@ class Escpos:
             remaining = copy.copy(encodings)
 
             if not encoding :
-                encoding = 'cp437'
+                #encoding = 'cp437'
+                encoding = 'cp936'
 
             while True: # Trying all encoding until one succeeds
                 try:

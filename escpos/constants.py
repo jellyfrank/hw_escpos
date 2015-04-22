@@ -90,6 +90,7 @@ TXT_ENC_WPC1256 = '\x1b\x74\x32' # WPC1256 Arabic
 TXT_ENC_WPC1257 = '\x1b\x74\x33' # WPC1257 Baltic Rim
 TXT_ENC_WPC1258 = '\x1b\x74\x34' # WPC1258 Vietnamese
 TXT_ENC_KZ1048  = '\x1b\x74\x35' # KZ-1048 Kazakhstan
+TXT_ENC_PC936 ='\x1C\x21\x00'
 
 TXT_ENC_KATAKANA_MAP = {
   # Maps UTF-8 Katakana symbols to KATAKANA Page Codes

@@ -84,9 +84,7 @@ class Usb(Escpos):
             sleep(0.1)
 
     def _raw(self, msg):
-        """ Print any command sent in raw format """        
-        _logger.info('****rawformat****')
-        _logger.info(self.device.write(self.out_ep, msg, self.interface))
+        """ Print any command sent in raw format """     
         if len(msg) != self.device.write(self.out_ep, msg, self.interface):
             self.device.write(self.out_ep, self.errorText, self.interface)
             raise TicketNotPrinted()

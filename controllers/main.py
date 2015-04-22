@@ -371,11 +371,14 @@ class EscposProxy(hw_proxy.Proxy):
     @http.route('/hw_proxy/print_xml_receipt', type='json', auth='none', cors='*')
     def print_xml_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT XML RECEIPT') 
-        driver.push_task('xml_receipt',receipt)
+        p = Network('192.168.118.20')
+        #driver.push_task('xml_receipt',receipt)
+        p.receipt(receipt)
 
     @http.route('/hw_proxy/print_network', type='json', auth='none', cors='*')
     def print_network(self, receipt):        
-        p = Network('192.168.110.253')
+        p = Network('192.168.118.20')
+        #driver.push_task('xml_receipt',receipt)
         p.receipt(receipt)
 
     @http.route('/hw_proxy/escpos/add_supported_device', type='http', auth='none', cors='*')
