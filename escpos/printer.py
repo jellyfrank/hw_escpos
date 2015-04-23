@@ -215,8 +215,12 @@ class Network(Escpos):
     def _raw(self, msg):
         self.device.send(msg)
 
-
     def __del__(self):
         """ Close TCP connection """
         self.device.close()
+
+    def close(self):
+        """ Close TCP connection """
+        self.device.close()
+
 

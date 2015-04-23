@@ -35,6 +35,73 @@ def utfstr(stuff):
     else:
         return str(stuff)
 
+class EscposIO(object):
+    ''' ESC/POS Printer IO object'''
+    def __init__(self, printer, autocut=True, autoclose=True):
+        self.printer = printer
+        self.params = {}
+        self.autocut = autocut
+        self.autoclose = autoclose
+
+
+    def set(self, **kwargs):
+        """
+        :type bold:         bool
+        :param bold:        set bold font
+        :type underline:    [None, 1, 2]
+        :param underline:   underline text
+        :type size:         ['normal', '2w', '2h' or '2x']
+        :param size:        Text size
+        :type font:         ['a', 'b', 'c']
+        :param font:        Font type
+        :type align:        ['left', 'center', 'right']
+        :param align:       Text position
+        :type inverted:     boolean
+        :param inverted:    White on black text
+        :type color:        [1, 2]
+        :param color:       Text color
+        :rtype:             NoneType
+        :returns:            None
+        """
+
+        self.params.update(kwargs)
+
+
+    def writelines(self, text, **kwargs):
+        params = dict(self.params)
+        params.update(kwargs)
+
+        if isinstance(text, unicode) or isinstance(text, str):
+            lines = text.split('\n')
+        elif isinstance(text, list) or isinstance(text, tuple):
+            lines = text
+        else:
+            lines = ["{0}".format(text),]
+
+        for line in lines:
+            self.printer.set(**params)
+            if isinstance(text, unicode):
+                self.printer.text(u"{0}\n".format(line))
+            else:
+                self.printer.text("{0}\n".format(line))
+
+
+    def close(self):
+        self.printer.close()
+
+
+    def __enter__(self, **kwargs):
+        return self
+
+
+    def __exit__(self, type, value, traceback):
+        if not (type is not None and issubclass(type, Exception)):
+            if self.autocut:
+                self.printer.cut()
+
+        if self.autoclose:
+            self.close()
+
 class StyleStack:
     """ 
     The stylestack is used by the xml receipt serializer to compute the active styles along the xml
@@ -701,6 +768,8 @@ class Escpos:
             self._raw(stylestack.to_escpos())
 
             print_elem(stylestack,serializer,root)
+
+            self._raw("\x1b\x40")
 
             if 'open-cashdrawer' in root.attrib and root.attrib['open-cashdrawer'] == 'true':
                 self.cashdraw(2)

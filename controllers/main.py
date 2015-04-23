@@ -21,6 +21,7 @@ try:
     from .. escpos import *
     from .. escpos.exceptions import *
     from .. escpos.printer import Usb,Network
+    from .. escpos.escpos import *
 except ImportError:
     escpos = printer = None
 
@@ -356,6 +357,8 @@ driver.push_task('printstatus')
 
 hw_proxy.drivers['escpos'] = driver
 
+
+
 class EscposProxy(hw_proxy.Proxy):
     
     @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
@@ -370,16 +373,16 @@ class EscposProxy(hw_proxy.Proxy):
 
     @http.route('/hw_proxy/print_xml_receipt', type='json', auth='none', cors='*')
     def print_xml_receipt(self, receipt):
-        _logger.info('ESC/POS: PRINT XML RECEIPT') 
-        p = Network('192.168.118.20')
-        #driver.push_task('xml_receipt',receipt)
-        p.receipt(receipt)
+        _logger.info('ESC/POS: PRINT XML RECEIPT')
+        with EscposIO(Network('192.168.118.20', port=9100),autocut=False, autoclose=True) as p:
+            #driver.push_task('xml_receipt',receipt)
+            p.printer.receipt(receipt)
 
     @http.route('/hw_proxy/print_network', type='json', auth='none', cors='*')
     def print_network(self, receipt):        
-        p = Network('192.168.118.20')
         #driver.push_task('xml_receipt',receipt)
-        p.receipt(receipt)
+        with EscposIO(Network('192.168.118.20', port=9100),autocut=False, autoclose=True) as p:
+            p.printer.receipt(receipt)
 
     @http.route('/hw_proxy/escpos/add_supported_device', type='http', auth='none', cors='*')
     def add_supported_device(self, device_string):
