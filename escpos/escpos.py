@@ -769,7 +769,8 @@ class Escpos:
 
             print_elem(stylestack,serializer,root)
 
-            self._raw("\x1b\x40")
+            self.cashdraw(2)
+            self.cashdraw(5)
 
             if 'open-cashdrawer' in root.attrib and root.attrib['open-cashdrawer'] == 'true':
                 self.cashdraw(2)

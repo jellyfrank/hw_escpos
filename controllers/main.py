@@ -381,7 +381,7 @@ class EscposProxy(hw_proxy.Proxy):
     @http.route('/hw_proxy/print_network', type='json', auth='none', cors='*')
     def print_network(self, receipt):        
         #driver.push_task('xml_receipt',receipt)
-        with EscposIO(Network('192.168.118.20', port=9100),autocut=False, autoclose=True) as p:
+        with EscposIO(Network('192.168.118.10', port=9100),autocut=False, autoclose=True) as p:
             p.printer.receipt(receipt)
 
     @http.route('/hw_proxy/escpos/add_supported_device', type='http', auth='none', cors='*')
